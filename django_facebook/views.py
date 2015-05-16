@@ -2,7 +2,7 @@ from django.conf import settings
 from django.contrib import messages
 from django.http import Http404
 from django.shortcuts import render_to_response
-from django.template.context import RequestContext
+from django.template import RequestContext
 from django.utils.translation import ugettext as _
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_POST
@@ -36,7 +36,8 @@ def connect(request, graph):
     context = RequestContext(request)
 
     # validation to ensure the context processor is enabled
-    if not context.get('FACEBOOK_APP_ID'):
+    if not (settings.get('FACEBOOK_APP_ID') and
+            'django_facebook.context_processors.facebook' in settings.TEMPLATES['OPTIONS']['context_processors']):
         message = 'Please specify a Facebook app id and ensure the context processor is enabled'
         raise ValueError(message)
 
