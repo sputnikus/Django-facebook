@@ -36,7 +36,7 @@ def connect(request, graph):
     context = RequestContext(request)
 
     # validation to ensure the context processor is enabled
-    if not (settings.get('FACEBOOK_APP_ID') and
+    if not (hasattr(settings, 'FACEBOOK_APP_ID') and
             'django_facebook.context_processors.facebook' in settings.TEMPLATES['OPTIONS']['context_processors']):
         message = 'Please specify a Facebook app id and ensure the context processor is enabled'
         raise ValueError(message)
