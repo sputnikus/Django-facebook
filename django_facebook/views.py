@@ -24,6 +24,16 @@ except NameError:
 logger = logging.getLogger(__name__)
 
 
+def check_settings():
+    cp_lists = (t['OPTIONS']['context_processors'] for t in settings.TEMPLATES)
+    for cp in cp_lists:
+        if (hasattr(settings, 'FACEBOOK_APP_ID') and
+                'django_facebook.context_processors.facebook' in cp):
+            return True
+    else:
+        return False
+
+
 @csrf_exempt
 @facebook_required_lazy
 def connect(request, graph):
@@ -33,11 +43,9 @@ def connect(request, graph):
     Don't bother reading this code, skip to _connect for the bit you're interested in :)
     '''
     backend = get_registration_backend()
-    context = RequestContext(request)
 
     # validation to ensure the context processor is enabled
-    if not (hasattr(settings, 'FACEBOOK_APP_ID') and
-            'django_facebook.context_processors.facebook' in settings.TEMPLATES['OPTIONS']['context_processors']):
+    if not check_settings():
         message = 'Please specify a Facebook app id and ensure the context processor is enabled'
         raise ValueError(message)
 
