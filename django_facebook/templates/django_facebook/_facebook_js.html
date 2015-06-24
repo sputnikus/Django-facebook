@@ -8,6 +8,7 @@
     staticUrl = '{% static "" %}';
     function facebookJSLoaded(){
         FB.init({appId: facebookAppId, status: false, cookie: true, xfbml: true, oauth: true});
+        FB.Canvas.setAutoGrow();
     }
     window.fbAsyncInit = facebookJSLoaded;
     F = new facebookClass(facebookAppId);
